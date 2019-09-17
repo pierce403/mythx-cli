@@ -146,11 +146,13 @@ def find_solidity_files(project_dir):
 @click.option(
     "--async/--wait",  # TODO: make default on full
     "async_flag",
-    help="Submit the job and print the UUID, or wait for execution to finish",
+    help="Submit the job and print the UUID, or wait for execution to finish.",
 )
 @click.option("--mode", type=click.Choice(["quick", "full"]), default="quick")
+@click.option("--report", "report_name", help="Name of this report.")
+@click.option("--project", "project_name", help="Name of target project.")
 @click.pass_obj
-def analyze(ctx, target, async_flag, mode):
+def analyze(ctx, target, async_flag, mode, report_name, project_name):
     """Analyze the given directory or arguments with MythX.
     \f
 
@@ -183,7 +185,7 @@ def analyze(ctx, target, async_flag, mode):
             )
             LOGGER.debug("Found Solidity files to submit:\n{}".format("\n".join(files)))
             for file in files:
-                jobs.append(generate_solidity_payload(file))
+                jobs.append(generate_solidity_payload(file, report_name, project_name))
         else:
             raise click.exceptions.UsageError(
                 "No argument given and unable to detect Truffle project or Solidity files"
@@ -198,7 +200,7 @@ def analyze(ctx, target, async_flag, mode):
                 LOGGER.debug(
                     "Trying to interpret {} as a solidity file".format(target_elem)
                 )
-                jobs.append(generate_solidity_payload(target_elem))
+                jobs.append(generate_solidity_payload(target_elem, report_name, project_name))
                 continue
             else:
                 raise click.exceptions.UsageError(

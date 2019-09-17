@@ -9,7 +9,7 @@ import solcx.exceptions
 PRAGMA_PATTERN = r"pragma solidity [\^<>=]*(\d+\.\d+\.\d+);"
 
 
-def generate_solidity_payload(file):
+def generate_solidity_payload(file, report_name, project_name):
     """Generate a MythX analysis request from a given Solidity file.
 
     This function will open the file, try to detect the used solc version from
@@ -94,4 +94,6 @@ def generate_solidity_payload(file):
         "deployed_source_map": deployed_source_map,
         "deployed_bytecode": deployed_bytecode,
         "solc_version": solc_version,
+        "report_name": report_name,
+        "project_name": project_name
     }
